@@ -284,7 +284,6 @@ resources:
     type: OS::Heat::MultipartMime
     properties:
       parts:
-      - config: {get_resource: setup_ssh} 
       - config: {get_resource: update_etc_hosts}
       - config: {get_resource: bootstrap_salt}
       - config: {get_resource: assign_roles}
@@ -557,33 +556,6 @@ resources:
             $STACK_ID: { get_param: "OS::stack_id" }
             $SALT_MASTER: { get_param: salt_master_address }
 
-  setup_ssh:
-    type: "OS::Heat::SoftwareConfig"
-    properties:
-      config:
-        str_replace:
-          template: |
-            #!/usr/bin/env bash
-            # add virtuser
-            set -e
-            useradd -m virtuser
-            mkdir -p /home/virtuser/.ssh
-            chown virtuser.virtuser /home/virtuser/.ssh
-            chmod 700 /home/virtuser/.ssh
-            # set the password for root and virtuser
-            echo virtuser:$USER_PWD | chpasswd
-            echo root:$ROOT_PWD | chpasswd
-            # setup sshd configuration
-            cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-            sed -e "/PasswordAuthentication/d" /etc/ssh/sshd_config > /etc/ssh/sshd_config.tmp
-            cat /etc/ssh/sshd_config.tmp > /etc/ssh/sshd_config
-            rm -f /etc/ssh/sshd_config.tmp
-            echo $'\n' >> /etc/ssh/sshd_config
-            echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
-            service sshd restart
-          params:
-            $USER_PWD: { get_param: virtuser_password}
-            $ROOT_PWD: { get_param: root_password}
 
             
 outputs:
