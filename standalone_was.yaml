@@ -451,7 +451,7 @@ resources:
           template: |
             #!/usr/bin/env bash
             set -e
-            /opt/saltstack/embedded/bin/salt-wrapper.py orchestrate_heat $SALT_API_USER $SALT_API_PASS \
+            /patterns/salt-wrapper.py orchestrate_heat $SALT_API_USER $SALT_API_PASS \
               --environment $ENV \
               --automation $WORKLOAD_AUTOMATION \
               --orchestration $ORCHESTRATION \
@@ -459,6 +459,14 @@ resources:
               --stack_id $STACK_ID \
               --pillar_file /tmp/pillar.yaml \
               --pillar stack_id=$STACK_ID
+            echo "            /patterns/salt-wrapper.py orchestrate_heat $SALT_API_USER $SALT_API_PASS \
+              --environment $ENV \
+              --automation $WORKLOAD_AUTOMATION \
+              --orchestration $ORCHESTRATION \
+              --wait_url '$WAIT_URL' \
+              --stack_id $STACK_ID \
+              --pillar_file /tmp/pillar.yaml \
+              --pillar stack_id=$STACK_ID" >> /tmp/test
           params:
             $SALT_API_USER: { get_param: salt_api_user}
             $SALT_API_PASS: { get_param: salt_api_pass}
