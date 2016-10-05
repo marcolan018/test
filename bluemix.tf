@@ -9,8 +9,12 @@ variable "image" {
   }
 }
 
+variable "name" {
+  default = "foo"
+}
+
 # Create a container
 resource "docker_container" "foo" {
     image = "${lookup(var.image, var.region)}"
-    name = "foo"
+    name = "${var.name}"
 }
