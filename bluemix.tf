@@ -2,5 +2,5 @@
 resource "docker_container" "foo" {
     image = "${lookup(var.image, var.region)}"
     name = "${var.name}"
-    memory = 128
+    memory = 1
 }
